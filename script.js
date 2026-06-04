@@ -56,9 +56,22 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('scroll', onScroll, {passive:true});
     onScroll();
 
-    // Contact form handling
+    // Contact form handling — EmailJS integration with Formsubmit fallback
+    // To use EmailJS: sign up at https://www.emailjs.com, create a service and template,
+    // then set the IDs below (or replace with your own config storage).
+    const EMAILJS_CONFIG = {
+        serviceID: '', // e.g. 'service_xxx'
+        templateID: '', // e.g. 'template_xxx'
+        userID: '' // e.g. 'user_xxx'
+    };
+
     const contactForm = document.getElementById('contact-form');
     const status = document.getElementById('form-status');
+
+    if (window.emailjs && EMAILJS_CONFIG.userID) {
+        try { emailjs.init(EMAILJS_CONFIG.userID); } catch (e) { console.warn('EmailJS init failed', e); }
+    }
+
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -73,10 +86,39 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (status) status.textContent = 'Please enter a valid email address.';
                 return;
             }
-            // Placeholder: replace with real submission logic (fetch / AJAX)
-            if (status) status.textContent = 'Thank you — message sent.';
-            contactForm.reset();
-            setTimeout(() => { if (status) status.textContent = ''; }, 4000);
+
+            // Prefer EmailJS if configured
+            if (EMAILJS_CONFIG.serviceID && EMAILJS_CONFIG.templateID && EMAILJS_CONFIG.userID && window.emailjs) {
+                if (status) status.textContent = 'Sending...';
+                emailjs.sendForm(EMAILJS_CONFIG.serviceID, EMAILJS_CONFIG.templateID, contactForm)
+                    .then(() => {
+                        if (status) status.textContent = 'Thank you — message sent.';
+                        contactForm.reset();
+                        setTimeout(() => { if (status) status.textContent = ''; }, 4000);
+                    }, (err) => {
+                        console.error('EmailJS error', err);
+                        if (status) status.textContent = 'Sending failed — try again later.';
+                    });
+                return;
+            }
+
+            // Fallback: POST to Formsubmit (note: Formsubmit requires verification on first use)
+            if (status) status.textContent = 'Sending...';
+            const formData = new FormData(contactForm);
+            formData.append('_subject', 'Portfolio contact — new message');
+            fetch('https://formsubmit.co/taimoorr2002@gmail.com', {method:'POST', body: formData})
+                .then(resp => {
+                    if (resp.ok) {
+                        if (status) status.textContent = 'Thank you — message sent (or verification email sent).';
+                        contactForm.reset();
+                    } else {
+                        if (status) status.textContent = 'Submission blocked; try verifying Formsubmit or set up EmailJS.';
+                    }
+                    setTimeout(() => { if (status) status.textContent = ''; }, 5000);
+                }).catch(err => {
+                    console.error('Form submit error', err);
+                    if (status) status.textContent = 'Submission failed; try again later.';
+                });
         });
     }
 

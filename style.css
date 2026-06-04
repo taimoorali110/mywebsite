@@ -41,6 +41,10 @@
     .nav-center a:hover::after{transform:scaleX(1)}
     .menu-toggle{display:none;background:transparent;border:0;font-size:1.25rem}
 
+    .site-header.scrolled{background:rgba(255,255,255,0.8);box-shadow:0 6px 20px rgba(12,18,25,0.06)}
+    .site-header.scrolled .header-inner{padding:0.45rem 0}
+    .site-header.scrolled .logo{transform:scale(0.95)}
+
     /* Hero */
     .hero{padding:6rem 0 4rem}
     .hero h1{font-size:2.6rem;margin:0 0 0.5rem;animation:fadeInUp .7s ease both}

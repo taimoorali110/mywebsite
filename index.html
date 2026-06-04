@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>My Personal Website</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <div class="nav-left">
+                <a class="logo" href="#hero" aria-label="Homepage">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2L15 8l6 .5-4.5 3.5L18 20l-6-3.5L6 20l1.5-8L3 8.5 9 8 12 2z" fill="currentColor"/></svg>
+                    <span class="brand">MyName</span>
+                </a>
+            </div>
+
+            <nav class="site-nav" aria-label="Main navigation">
+                <ul class="nav-center">
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#portfolio">Portfolio</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-right">
+                <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="hero">
+            <div class="container">
+                <h1>Welcome — I build modern, responsive websites</h1>
+                <p class="lead">I'm a web developer focused on clean design, performance, and delightful UX.</p>
+                <p><a class="btn primary" href="#projects">See my work</a></p>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <div class="container">
+                <h2>About Me</h2>
+                <p>I have experience in HTML, CSS, JavaScript, and various web frameworks. I enjoy building user-friendly and visually appealing websites.</p>
+            </div>
+        </section>
+
+        <section id="skills" class="section">
+            <div class="container">
+                <h2>Skills</h2>
+                <ul class="skills-grid">
+                    <li class="skill">HTML</li>
+                    <li class="skill">CSS</li>
+                    <li class="skill">JavaScript</li>
+                    <li class="skill">React</li>
+                    <li class="skill">Node.js</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="portfolio" class="section portfolio-section">
+            <div class="container">
+                <h2>Portfolio</h2>
+                <p class="lead">Selected projects — click to view details.</p>
+                <div class="portfolio-grid">
+                    <a class="portfolio-tile tile-large" href="#" aria-label="Project: Design System">
+                        <div class="tile-bg tile-1"></div>
+                        <div class="tile-overlay">
+                            <h3>Design System</h3>
+                            <p>Component library and design tokens for scalable apps.</p>
+                        </div>
+                    </a>
+
+                    <a class="portfolio-tile tile-medium" href="#" aria-label="Project: E-commerce">
+                        <div class="tile-bg tile-2"></div>
+                        <div class="tile-overlay">
+                            <h3>E‑commerce</h3>
+                            <p>Performance-focused storefront with accessible UX.</p>
+                        </div>
+                    </a>
+
+                    <a class="portfolio-tile tile-medium" href="#" aria-label="Project: Dashboard">
+                        <div class="tile-bg tile-3"></div>
+                        <div class="tile-overlay">
+                            <h3>Analytics Dashboard</h3>
+                            <p>Real-time charts and clean UI for business insights.</p>
+                        </div>
+                    </a>
+
+                    <a class="portfolio-tile tile-small" href="#" aria-label="Project: Mobile App">
+                        <div class="tile-bg tile-4"></div>
+                        <div class="tile-overlay">
+                            <h3>Mobile App</h3>
+                            <p>Native-feeling PWA with offline support.</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section">
+            <div class="container">
+                <h2>Contact</h2>
+                <form id="contact-form" class="contact-form">
+                    <label for="name">Name</label>
+                    <input id="name" name="name" type="text" required>
+
+                    <label for="email">Email</label>
+                    <input id="email" name="email" type="email" required>
+
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+
+                    <button type="submit" class="btn">Send message</button>
+                    <p id="form-status" class="form-status" aria-live="polite"></p>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>&copy; <span id="year"></span> MyName — Built with care.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -60,9 +60,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // To use EmailJS: sign up at https://www.emailjs.com, create a service and template,
     // then set the IDs below (or replace with your own config storage).
     const EMAILJS_CONFIG = {
-        serviceID: '', // e.g. 'service_xxx'
-        templateID: '', // e.g. 'template_xxx'
-        userID: '' // e.g. 'user_xxx'
+        serviceID: 'service_qzm4b85',
+        templateID: 'service_qzm4b85',
+        userID: 'U_ocY0NHNPqX9QOvW'
     };
 
     const contactForm = document.getElementById('contact-form');

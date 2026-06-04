@@ -102,23 +102,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // Fallback: POST to Formsubmit (note: Formsubmit requires verification on first use)
-            if (status) status.textContent = 'Sending...';
-            const formData = new FormData(contactForm);
-            formData.append('_subject', 'Portfolio contact — new message');
-            fetch('https://formsubmit.co/taimoorr2002@gmail.com', {method:'POST', body: formData})
-                .then(resp => {
-                    if (resp.ok) {
-                        if (status) status.textContent = 'Thank you — message sent (or verification email sent).';
-                        contactForm.reset();
-                    } else {
-                        if (status) status.textContent = 'Submission blocked; try verifying Formsubmit or set up EmailJS.';
-                    }
-                    setTimeout(() => { if (status) status.textContent = ''; }, 5000);
-                }).catch(err => {
-                    console.error('Form submit error', err);
-                    if (status) status.textContent = 'Submission failed; try again later.';
-                });
+            // Fallback: open user's mail client via mailto (quick & easy)
+            if (status) status.textContent = 'Opening your mail client...';
+            const subject = 'Portfolio contact — new message';
+            const body = `Name: ${name}\nEmail: ${email}\n\n${message}`;
+            const mailto = `mailto:taimoorr2002@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailto;
+            setTimeout(() => {
+                if (status) status.textContent = '';
+                contactForm.reset();
+            }, 4000);
         });
     }
 

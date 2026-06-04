@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // then set the IDs below (or replace with your own config storage).
     const EMAILJS_CONFIG = {
         serviceID: 'service_qzm4b85',
-        templateID: 'service_qzm4b85',
+        templateID: 'template_p8ivg4k',
         userID: 'U_ocY0NHNPqX9QOvW'
     };
 

@@ -12,6 +12,23 @@
     <h1>Anomaly Detection</h1>
     <p>Repository: <a href="https://github.com/taimoorali110/Taimoor_10220374_Anomaly_Detection" target="_blank">github.com/taimoorali110/Taimoor_10220374_Anomaly_Detection</a></p>
     <p>Project materials and report for anomaly detection coursework.</p>
+    <section class="readme">
+      <h2>README</h2>
+      <pre>
+# Simple Anomaly Detection (IoT) — Minimal Project
+
+This minimal project trains an IsolationForest on synthetic sensor data (temperature, humidity, sound_volume) and exposes a simple Flask REST API to return anomaly scores.
+
+Quick start:
+python -m venv .venv
+pip install -r requirements.txt
+python train.py
+python api.py
+
+Endpoints:
+POST /predict with JSON object(s) containing temperature, humidity, sound_volume.
+      </pre>
+    </section>
   </main>
   <script src="../script.js"></script>
 </body>

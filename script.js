@@ -90,7 +90,14 @@ document.addEventListener('DOMContentLoaded', function() {
             // Prefer EmailJS if configured
             if (EMAILJS_CONFIG.serviceID && EMAILJS_CONFIG.templateID && EMAILJS_CONFIG.userID && window.emailjs) {
                 if (status) status.textContent = 'Sending...';
-                emailjs.sendForm(EMAILJS_CONFIG.serviceID, EMAILJS_CONFIG.templateID, contactForm)
+                const templateParams = {
+                    from_name: name,
+                    from_email: email,
+                    message: message,
+                    reply_to: email,
+                    to_email: 'taimoorr2002@gmail.com'
+                };
+                emailjs.send(EMAILJS_CONFIG.serviceID, EMAILJS_CONFIG.templateID, templateParams)
                     .then(() => {
                         if (status) status.textContent = 'Thank you — message sent.';
                         contactForm.reset();

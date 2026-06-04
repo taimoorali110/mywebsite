@@ -22,12 +22,12 @@ Reply-to: {{reply_to}}
 
 ```html
 <div style="font-family: Arial, sans-serif; color: #111827; line-height: 1.6;">
-  <h2 style="margin: 0 0 12px; color: #0f172a;">New portfolio message</h2>
-  <p><strong>Name:</strong> {{from_name}}</p>
-  <p><strong>Email:</strong> {{from_email}}</p>
-  <p><strong>Message:</strong></p>
-  <div style="padding: 12px; background: #f3f4f6; border-radius: 8px; white-space: pre-wrap;">{{message}}</div>
-  <p style="margin-top: 12px;"><strong>Reply-to:</strong> {{reply_to}}</p>
+<h2 style="margin: 0 0 12px;">New portfolio message</h2>
+<p><strong>Name:</strong> {{from_name}}</p>
+<p><strong>Email:</strong> {{from_email}}</p>
+<p><strong>Message:</strong></p>
+<div style="padding: 12px; background: #f3f4f6; border-radius: 8px; white-space: pre-wrap;">{{message}}</div>
+<p style="margin-top: 12px;"><strong>Reply to:</strong> {{reply_to}}</p>
 </div>
 ```
 

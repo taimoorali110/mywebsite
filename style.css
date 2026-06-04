@@ -1,31 +1,42 @@
 :root{
-    --bg:#0f1720;
-    --surface:#111827;
-    --muted:#9ca3af;
-    :root{
-        --bg:#ffffff;
-        --surface:#f6f7f8;
-        --muted:#6b7280;
-        --text:#0b1220;
-        --accent:#0071e3;
-        --accent-2:#5ac8fa;
-        --card:#ffffff;
-        --radius:12px;
-    }
+    --bg:#ffffff;
+    --surface:#f6f7f8;
+    --muted:#6b7280;
+    --text:#0b1220;
+    --accent:#0071e3;
+    --accent-2:#5ac8fa;
+    --card:#ffffff;
+    --radius:12px;
+}
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-        margin:0;
-        font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-        background:var(--bg);
-        color:var(--text);
-        -webkit-font-smoothing:antialiased;
-        -moz-osx-font-smoothing:grayscale;
-        line-height:1.5;
-    }
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+    margin:0;
+    font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background:var(--bg);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    line-height:1.5;
+}
 
-    .container{max-width:1200px;margin:0 auto;padding:2rem}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+
+/* About / Avatar / Contact helpers */
+.about-inner{display:flex;gap:2rem;align-items:center}
+.about-left{flex:1}
+.about-right{width:220px;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.avatar{width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:28px}
+.socials{display:flex;flex-direction:column;gap:0.5rem}
+.socials a{color:var(--accent);text-decoration:none;font-weight:600}
+
+.contact-inner{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start}
+.contact-card{background:var(--card);padding:1.25rem;border-radius:12px;box-shadow:0 6px 24px rgba(12,18,25,0.06)}
+.contact-card h2{margin-top:0}
+.contact-socials a{margin-right:12px;color:var(--accent);text-decoration:none}
+
+.nav-center a.active{color:var(--accent)}
 
     /* Header / Nav */
     .site-header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,0.6);backdrop-filter:blur(8px);border-bottom:1px solid rgba(15,23,42,0.04)}

@@ -122,92 +122,184 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Mini game: star catcher
-    const gameBoard = document.getElementById('star-game-board');
-    const gameTarget = document.getElementById('game-target');
-    const gameStart = document.getElementById('game-start');
-    const gameReset = document.getElementById('game-reset');
-    const gameScore = document.getElementById('game-score');
-    const gameTime = document.getElementById('game-time');
-    const gameStatus = document.getElementById('game-status');
+    // Mini game: snake
+    const snakeBoard = document.getElementById('snake-game-board');
+    const snakeCanvas = document.getElementById('snake-canvas');
+    const snakeStart = document.getElementById('game-start');
+    const snakeReset = document.getElementById('game-reset');
+    const snakeScore = document.getElementById('game-score');
+    const snakeLength = document.getElementById('game-length');
+    const snakeStatus = document.getElementById('game-status');
+    const snakeOverlay = document.getElementById('snake-overlay');
 
-    let gameScoreValue = 0;
-    let gameTimeLeft = 20;
-    let gameRunning = false;
-    let gameTimer = null;
+    const snakeCtx = snakeCanvas ? snakeCanvas.getContext('2d') : null;
+    const snakeGrid = 18;
+    const snakeCells = 20;
+    const snakeSize = snakeGrid * snakeCells;
 
-    function updateGameUI(message) {
-        if (gameScore) gameScore.textContent = String(gameScoreValue);
-        if (gameTime) gameTime.textContent = String(gameTimeLeft);
-        if (gameStatus) gameStatus.textContent = message;
+    let snakeRunning = false;
+    let snakeLoop = null;
+    let snakeScoreValue = 0;
+    let snakeDirection = {x: 1, y: 0};
+    let snakeNextDirection = {x: 1, y: 0};
+    let snakeBody = [];
+    let snakeFood = {x: 10, y: 10};
+    let snakeSpeed = 180;
+
+    function resizeSnakeCanvas() {
+        if (!snakeCanvas) return;
+        snakeCanvas.width = snakeSize;
+        snakeCanvas.height = snakeSize;
     }
 
-    function placeTarget() {
-        if (!gameBoard || !gameTarget) return;
-        const boardRect = gameBoard.getBoundingClientRect();
-        const targetSize = 68;
-        const padding = 12;
-        const maxX = Math.max(padding, boardRect.width - targetSize - padding);
-        const maxY = Math.max(padding, boardRect.height - targetSize - padding);
-        const x = Math.floor(Math.random() * (maxX - padding + 1)) + padding;
-        const y = Math.floor(Math.random() * (maxY - padding + 1)) + padding;
-        gameTarget.style.left = `${x}px`;
-        gameTarget.style.top = `${y}px`;
-        gameTarget.style.display = 'inline-flex';
+    function updateSnakeUI(message) {
+        if (snakeScore) snakeScore.textContent = String(snakeScoreValue);
+        if (snakeLength) snakeLength.textContent = String(snakeBody.length);
+        if (snakeStatus) snakeStatus.textContent = message;
+        if (snakeOverlay) snakeOverlay.textContent = message;
     }
 
-    function endGame() {
-        gameRunning = false;
-        clearInterval(gameTimer);
-        gameTimer = null;
-        if (gameTarget) gameTarget.style.display = 'none';
-        updateGameUI(`Finished with ${gameScoreValue} points`);
-        if (gameStart) gameStart.textContent = 'Play Again';
+    function randomFood() {
+        let food;
+        do {
+            food = {
+                x: Math.floor(Math.random() * snakeCells),
+                y: Math.floor(Math.random() * snakeCells)
+            };
+        } while (snakeBody.some(segment => segment.x === food.x && segment.y === food.y));
+        return food;
     }
 
-    function startGame() {
-        gameScoreValue = 0;
-        gameTimeLeft = 20;
-        gameRunning = true;
-        if (gameStart) gameStart.textContent = 'Playing...';
-        placeTarget();
-        updateGameUI('Go!');
-        clearInterval(gameTimer);
-        gameTimer = setInterval(() => {
-            gameTimeLeft -= 1;
-            updateGameUI(gameRunning ? 'Catch the star!' : 'Ready');
-            if (gameTimeLeft <= 0) {
-                gameTimeLeft = 0;
-                updateGameUI('Time is up');
-                endGame();
+    function resetSnakeState() {
+        snakeScoreValue = 0;
+        snakeDirection = {x: 1, y: 0};
+        snakeNextDirection = {x: 1, y: 0};
+        snakeBody = [
+            {x: 9, y: 10},
+            {x: 8, y: 10},
+            {x: 7, y: 10}
+        ];
+        snakeFood = randomFood();
+        snakeSpeed = 180;
+        updateSnakeUI('Ready');
+        drawSnake();
+    }
+
+    function drawSnake() {
+        if (!snakeCtx || !snakeCanvas) return;
+        snakeCtx.clearRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+
+        const cell = snakeGrid;
+
+        snakeCtx.fillStyle = '#0b1220';
+        snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+
+        for (let y = 0; y < snakeCells; y += 1) {
+            for (let x = 0; x < snakeCells; x += 1) {
+                snakeCtx.fillStyle = (x + y) % 2 === 0 ? '#0f172a' : '#111827';
+                snakeCtx.fillRect(x * cell, y * cell, cell, cell);
             }
-        }, 1000);
+        }
+
+        snakeCtx.fillStyle = '#ef4444';
+        snakeCtx.fillRect(snakeFood.x * cell + 2, snakeFood.y * cell + 2, cell - 4, cell - 4);
+
+        snakeBody.forEach((segment, index) => {
+            snakeCtx.fillStyle = index === 0 ? '#facc15' : '#22c55e';
+            snakeCtx.fillRect(segment.x * cell + 1, segment.y * cell + 1, cell - 2, cell - 2);
+        });
     }
 
-    function resetGame() {
-        gameScoreValue = 0;
-        gameTimeLeft = 20;
-        gameRunning = false;
-        clearInterval(gameTimer);
-        gameTimer = null;
-        if (gameTarget) gameTarget.style.display = 'none';
-        if (gameStart) gameStart.textContent = 'Start Game';
-        updateGameUI('Ready');
+    function setDirection(x, y) {
+        const isReverse = snakeDirection.x === -x && snakeDirection.y === -y;
+        if (!isReverse) {
+            snakeNextDirection = {x, y};
+        }
     }
 
-    if (gameBoard && gameTarget && gameStart && gameReset) {
-        gameStart.addEventListener('click', startGame);
-        gameReset.addEventListener('click', resetGame);
-        gameTarget.addEventListener('click', () => {
-            if (!gameRunning) return;
-            gameScoreValue += 1;
-            updateGameUI('Nice!');
-            placeTarget();
+    function gameOver() {
+        snakeRunning = false;
+        clearInterval(snakeLoop);
+        snakeLoop = null;
+        if (snakeStart) snakeStart.textContent = 'Play Again';
+        updateSnakeUI('Game Over');
+    }
+
+    function stepSnake() {
+        snakeDirection = snakeNextDirection;
+        const head = snakeBody[0];
+        const nextHead = {
+            x: head.x + snakeDirection.x,
+            y: head.y + snakeDirection.y
+        };
+
+        const hitWall = nextHead.x < 0 || nextHead.x >= snakeCells || nextHead.y < 0 || nextHead.y >= snakeCells;
+        const hitSelf = snakeBody.some(segment => segment.x === nextHead.x && segment.y === nextHead.y);
+        if (hitWall || hitSelf) {
+            drawSnake();
+            gameOver();
+            return;
+        }
+
+        snakeBody.unshift(nextHead);
+
+        const ateFood = nextHead.x === snakeFood.x && nextHead.y === snakeFood.y;
+        if (ateFood) {
+            snakeScoreValue += 1;
+            snakeFood = randomFood();
+            snakeSpeed = Math.max(90, snakeSpeed - 4);
+            updateSnakeUI('Nice!');
+            clearInterval(snakeLoop);
+            snakeLoop = setInterval(stepSnake, snakeSpeed);
+        } else {
+            snakeBody.pop();
+        }
+
+        drawSnake();
+    }
+
+    function startSnake() {
+        if (snakeRunning) return;
+        snakeRunning = true;
+        if (snakeStart) snakeStart.textContent = 'Playing...';
+        updateSnakeUI('Go!');
+        clearInterval(snakeLoop);
+        snakeLoop = setInterval(stepSnake, snakeSpeed);
+    }
+
+    function resetSnake() {
+        snakeRunning = false;
+        clearInterval(snakeLoop);
+        snakeLoop = null;
+        if (snakeStart) snakeStart.textContent = 'Start Game';
+        resetSnakeState();
+    }
+
+    if (snakeBoard && snakeCanvas && snakeStart && snakeReset && snakeCtx) {
+        resizeSnakeCanvas();
+        resetSnakeState();
+        snakeBoard.addEventListener('click', () => snakeBoard.focus());
+        snakeStart.addEventListener('click', startSnake);
+        snakeReset.addEventListener('click', resetSnake);
+        document.addEventListener('keydown', (event) => {
+            const key = event.key.toLowerCase();
+            if (key === 'arrowup' || key === 'w') setDirection(0, -1);
+            if (key === 'arrowdown' || key === 's') setDirection(0, 1);
+            if (key === 'arrowleft' || key === 'a') setDirection(-1, 0);
+            if (key === 'arrowright' || key === 'd') setDirection(1, 0);
+            if ((key === 'enter' || key === ' ') && !snakeRunning) startSnake();
         });
-        window.addEventListener('resize', () => {
-            if (gameRunning) placeTarget();
+        document.querySelectorAll('.snake-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const dir = button.getAttribute('data-dir');
+                if (dir === 'up') setDirection(0, -1);
+                if (dir === 'down') setDirection(0, 1);
+                if (dir === 'left') setDirection(-1, 0);
+                if (dir === 'right') setDirection(1, 0);
+                if (!snakeRunning) startSnake();
+            });
         });
-        resetGame();
+        window.addEventListener('resize', resizeSnakeCanvas);
     }
 
     function validateEmail(email) {

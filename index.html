@@ -177,20 +177,29 @@
 
         <section id="game" class="section game-section">
             <div class="container">
-                <h2>Mini Game</h2>
-                <p class="lead">Catch the star as many times as you can in 20 seconds.</p>
-                <div class="game-shell">
+                <h2>Snake Game</h2>
+                <p class="lead">Play the classic Nokia-style Snake with arrow keys, WASD, or the on-screen controls.</p>
+                <div class="game-shell snake-shell">
                     <div class="game-stats" aria-live="polite">
                         <div><span>Score</span><strong id="game-score">0</strong></div>
-                        <div><span>Time</span><strong id="game-time">20</strong></div>
+                        <div><span>Length</span><strong id="game-length">3</strong></div>
                         <div><span>Status</span><strong id="game-status">Ready</strong></div>
                     </div>
-                    <div id="star-game-board" class="game-board" aria-label="Star catching game board">
-                        <button id="game-target" class="game-target" type="button" aria-label="Catch the star">★</button>
+                    <div id="snake-game-board" class="snake-board" aria-label="Snake game board" tabindex="0">
+                        <canvas id="snake-canvas" width="360" height="360"></canvas>
+                        <div class="snake-overlay" id="snake-overlay">Press Start to play</div>
                     </div>
                     <div class="game-controls">
                         <button id="game-start" class="btn primary" type="button">Start Game</button>
                         <button id="game-reset" class="btn" type="button">Reset</button>
+                    </div>
+                    <div class="snake-pad" aria-label="Snake movement controls">
+                        <button class="snake-btn" type="button" data-dir="up">▲</button>
+                        <div class="snake-row">
+                            <button class="snake-btn" type="button" data-dir="left">◀</button>
+                            <button class="snake-btn" type="button" data-dir="down">▼</button>
+                            <button class="snake-btn" type="button" data-dir="right">▶</button>
+                        </div>
                     </div>
                 </div>
             </div>

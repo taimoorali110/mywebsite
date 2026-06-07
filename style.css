@@ -164,7 +164,7 @@ body{
         .hero h1{font-size:1.6rem}
         .game-stats{grid-template-columns:1fr}
         .snake-board{height:280px}
-        .support-badge{right:12px;top:92px;transform:scale(0.94);max-width:180px}
+        .support-badge{right:18px;top:108px;transform:none;max-width:180px}
     }
 
     /* Animations */

@@ -293,6 +293,8 @@ document.addEventListener('DOMContentLoaded', function() {
         snakeCtx.clearRect(0, 0, snakeCanvas.width, snakeCanvas.height);
 
         const cell = snakeGrid;
+        const bodyInset = 2;
+        const foodInset = 3;
 
         snakeCtx.fillStyle = '#0b1220';
         snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
@@ -305,11 +307,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         snakeCtx.fillStyle = '#ef4444';
-        snakeCtx.fillRect(snakeFood.x * cell + 2, snakeFood.y * cell + 2, cell - 4, cell - 4);
+        snakeCtx.beginPath();
+        snakeCtx.arc(snakeFood.x * cell + cell / 2, snakeFood.y * cell + cell / 2, cell / 2 - foodInset, 0, Math.PI * 2);
+        snakeCtx.fill();
 
         snakeBody.forEach((segment, index) => {
-            snakeCtx.fillStyle = index === 0 ? '#facc15' : '#22c55e';
-            snakeCtx.fillRect(segment.x * cell + 1, segment.y * cell + 1, cell - 2, cell - 2);
+            const isHead = index === 0;
+            snakeCtx.fillStyle = isHead ? '#facc15' : '#22c55e';
+            snakeCtx.beginPath();
+            snakeCtx.roundRect(segment.x * cell + bodyInset, segment.y * cell + bodyInset, cell - bodyInset * 2, cell - bodyInset * 2, 6);
+            snakeCtx.fill();
+
+            if (isHead) {
+                snakeCtx.fillStyle = '#0b1220';
+                const eyeSize = 2.4;
+                const eyeOffsetX = snakeDirection.x === -1 ? 9 : snakeDirection.x === 1 ? 13 : 11;
+                const eyeOffsetY = snakeDirection.y === -1 ? 9 : snakeDirection.y === 1 ? 13 : 10;
+                snakeCtx.beginPath();
+                snakeCtx.arc(segment.x * cell + eyeOffsetX, segment.y * cell + eyeOffsetY, eyeSize, 0, Math.PI * 2);
+                snakeCtx.fill();
+                snakeCtx.beginPath();
+                snakeCtx.arc(segment.x * cell + eyeOffsetX + 5, segment.y * cell + eyeOffsetY, eyeSize, 0, Math.PI * 2);
+                snakeCtx.fill();
+            }
         });
     }
 

@@ -122,6 +122,94 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Mini game: star catcher
+    const gameBoard = document.getElementById('star-game-board');
+    const gameTarget = document.getElementById('game-target');
+    const gameStart = document.getElementById('game-start');
+    const gameReset = document.getElementById('game-reset');
+    const gameScore = document.getElementById('game-score');
+    const gameTime = document.getElementById('game-time');
+    const gameStatus = document.getElementById('game-status');
+
+    let gameScoreValue = 0;
+    let gameTimeLeft = 20;
+    let gameRunning = false;
+    let gameTimer = null;
+
+    function updateGameUI(message) {
+        if (gameScore) gameScore.textContent = String(gameScoreValue);
+        if (gameTime) gameTime.textContent = String(gameTimeLeft);
+        if (gameStatus) gameStatus.textContent = message;
+    }
+
+    function placeTarget() {
+        if (!gameBoard || !gameTarget) return;
+        const boardRect = gameBoard.getBoundingClientRect();
+        const targetSize = 68;
+        const padding = 12;
+        const maxX = Math.max(padding, boardRect.width - targetSize - padding);
+        const maxY = Math.max(padding, boardRect.height - targetSize - padding);
+        const x = Math.floor(Math.random() * (maxX - padding + 1)) + padding;
+        const y = Math.floor(Math.random() * (maxY - padding + 1)) + padding;
+        gameTarget.style.left = `${x}px`;
+        gameTarget.style.top = `${y}px`;
+        gameTarget.style.display = 'inline-flex';
+    }
+
+    function endGame() {
+        gameRunning = false;
+        clearInterval(gameTimer);
+        gameTimer = null;
+        if (gameTarget) gameTarget.style.display = 'none';
+        updateGameUI(`Finished with ${gameScoreValue} points`);
+        if (gameStart) gameStart.textContent = 'Play Again';
+    }
+
+    function startGame() {
+        gameScoreValue = 0;
+        gameTimeLeft = 20;
+        gameRunning = true;
+        if (gameStart) gameStart.textContent = 'Playing...';
+        placeTarget();
+        updateGameUI('Go!');
+        clearInterval(gameTimer);
+        gameTimer = setInterval(() => {
+            gameTimeLeft -= 1;
+            updateGameUI(gameRunning ? 'Catch the star!' : 'Ready');
+            if (gameTimeLeft <= 0) {
+                gameTimeLeft = 0;
+                updateGameUI('Time is up');
+                endGame();
+            }
+        }, 1000);
+    }
+
+    function resetGame() {
+        gameScoreValue = 0;
+        gameTimeLeft = 20;
+        gameRunning = false;
+        clearInterval(gameTimer);
+        gameTimer = null;
+        if (gameTarget) gameTarget.style.display = 'none';
+        if (gameStart) gameStart.textContent = 'Start Game';
+        updateGameUI('Ready');
+    }
+
+    if (gameBoard && gameTarget && gameStart && gameReset) {
+        gameStart.addEventListener('click', startGame);
+        gameReset.addEventListener('click', resetGame);
+        gameTarget.addEventListener('click', () => {
+            if (!gameRunning) return;
+            gameScoreValue += 1;
+            updateGameUI('Nice!');
+            placeTarget();
+        });
+        window.addEventListener('resize', () => {
+            if (gameRunning) placeTarget();
+        });
+        resetGame();
+    }
+
     function validateEmail(email) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).toLowerCase());
     }

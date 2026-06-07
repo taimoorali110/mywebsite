@@ -31,6 +31,9 @@ body{
 .avatar-img{width:140px;height:140px;border-radius:50%;object-fit:cover;border:4px solid #fff;box-shadow:0 10px 30px rgba(12,18,25,0.12)}
 .socials{display:flex;flex-direction:column;gap:0.5rem}
 .socials a{color:var(--accent);text-decoration:none;font-weight:600}
+.spotify-link{display:inline-flex;align-items:center;justify-content:center;padding:0.55rem 0.9rem;border-radius:999px;background:#1db954;color:#ffffff !important;text-decoration:none !important;font-weight:700;box-shadow:0 8px 18px rgba(29,185,84,0.22);transition:transform .2s ease,box-shadow .2s ease,filter .2s ease}
+.spotify-link:hover{transform:translateY(-1px);box-shadow:0 12px 22px rgba(29,185,84,0.28);filter:saturate(1.05)}
+.spotify-link:focus-visible{outline:3px solid rgba(29,185,84,0.35);outline-offset:2px}
 
 .contact-inner{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start}
 .contact-card{background:var(--card);padding:1.25rem;border-radius:12px;box-shadow:0 6px 24px rgba(12,18,25,0.06)}

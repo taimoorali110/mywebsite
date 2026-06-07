@@ -131,11 +131,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const snakeLength = document.getElementById('game-length');
     const snakeStatus = document.getElementById('game-status');
     const snakeOverlay = document.getElementById('snake-overlay');
+    const snakeLeaderboard = document.getElementById('snake-leaderboard');
 
     const snakeCtx = snakeCanvas ? snakeCanvas.getContext('2d') : null;
     const snakeGrid = 18;
     const snakeCells = 20;
     const snakeSize = snakeGrid * snakeCells;
+    const snakeLeaderboardKey = 'taimoor-snake-leaderboard-v1';
 
     let snakeRunning = false;
     let snakeLoop = null;
@@ -145,6 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let snakeBody = [];
     let snakeFood = {x: 10, y: 10};
     let snakeSpeed = 180;
+    let snakeLeaderboardData = loadSnakeLeaderboard();
 
     function resizeSnakeCanvas() {
         if (!snakeCanvas) return;
@@ -157,6 +160,79 @@ document.addEventListener('DOMContentLoaded', function() {
         if (snakeLength) snakeLength.textContent = String(snakeBody.length);
         if (snakeStatus) snakeStatus.textContent = message;
         if (snakeOverlay) snakeOverlay.textContent = message;
+    }
+
+    function loadSnakeLeaderboard() {
+        try {
+            const stored = window.localStorage.getItem(snakeLeaderboardKey);
+            const parsed = stored ? JSON.parse(stored) : [];
+            if (!Array.isArray(parsed)) return [];
+            return parsed
+                .filter(entry => entry && typeof entry.name === 'string' && Number.isFinite(entry.score))
+                .slice(0, 5);
+        } catch (error) {
+            return [];
+        }
+    }
+
+    function saveSnakeLeaderboard() {
+        try {
+            window.localStorage.setItem(snakeLeaderboardKey, JSON.stringify(snakeLeaderboardData));
+        } catch (error) {
+            console.warn('Unable to save snake leaderboard', error);
+        }
+    }
+
+    function renderSnakeLeaderboard() {
+        if (!snakeLeaderboard) return;
+        snakeLeaderboard.innerHTML = '';
+
+        if (!snakeLeaderboardData.length) {
+            const emptyItem = document.createElement('li');
+            emptyItem.className = 'leaderboard-empty';
+            emptyItem.textContent = 'No scores yet. Be the first one.';
+            snakeLeaderboard.appendChild(emptyItem);
+            return;
+        }
+
+        snakeLeaderboardData.forEach((entry, index) => {
+            const item = document.createElement('li');
+            const rank = document.createElement('span');
+            rank.className = 'rank';
+            rank.textContent = String(index + 1);
+
+            const player = document.createElement('span');
+            player.className = 'player';
+            player.textContent = entry.name;
+
+            const points = document.createElement('span');
+            points.className = 'points';
+            points.textContent = `${entry.score} pts`;
+
+            item.append(rank, player, points);
+            snakeLeaderboard.appendChild(item);
+        });
+    }
+
+    function qualifiesForSnakeLeaderboard(score) {
+        if (score <= 0) return false;
+        if (snakeLeaderboardData.length < 5) return true;
+        return score >= snakeLeaderboardData[snakeLeaderboardData.length - 1].score;
+    }
+
+    function submitSnakeLeaderboardScore(score) {
+        if (!qualifiesForSnakeLeaderboard(score)) return;
+
+        const enteredName = window.prompt('New high score! Enter your name for the leaderboard:', 'Anonymous');
+        if (enteredName === null) return;
+
+        const name = enteredName.trim() || 'Anonymous';
+        snakeLeaderboardData = snakeLeaderboardData
+            .concat({name, score, createdAt: Date.now()})
+            .sort((a, b) => b.score - a.score || a.createdAt - b.createdAt)
+            .slice(0, 5);
+        saveSnakeLeaderboard();
+        renderSnakeLeaderboard();
     }
 
     function randomFood() {
@@ -221,6 +297,7 @@ document.addEventListener('DOMContentLoaded', function() {
         snakeRunning = false;
         clearInterval(snakeLoop);
         snakeLoop = null;
+        submitSnakeLeaderboardScore(snakeScoreValue);
         if (snakeStart) snakeStart.textContent = 'Play Again';
         updateSnakeUI('Game Over');
     }
@@ -229,13 +306,14 @@ document.addEventListener('DOMContentLoaded', function() {
         snakeDirection = snakeNextDirection;
         const head = snakeBody[0];
         const nextHead = {
-            x: head.x + snakeDirection.x,
-            y: head.y + snakeDirection.y
+            x: (head.x + snakeDirection.x + snakeCells) % snakeCells,
+            y: (head.y + snakeDirection.y + snakeCells) % snakeCells
         };
 
-        const hitWall = nextHead.x < 0 || nextHead.x >= snakeCells || nextHead.y < 0 || nextHead.y >= snakeCells;
-        const hitSelf = snakeBody.some(segment => segment.x === nextHead.x && segment.y === nextHead.y);
-        if (hitWall || hitSelf) {
+        const ateFood = nextHead.x === snakeFood.x && nextHead.y === snakeFood.y;
+        const bodyToCheck = ateFood ? snakeBody : snakeBody.slice(0, -1);
+        const hitSelf = bodyToCheck.some(segment => segment.x === nextHead.x && segment.y === nextHead.y);
+        if (hitSelf) {
             drawSnake();
             gameOver();
             return;
@@ -243,7 +321,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         snakeBody.unshift(nextHead);
 
-        const ateFood = nextHead.x === snakeFood.x && nextHead.y === snakeFood.y;
         if (ateFood) {
             snakeScoreValue += 1;
             snakeFood = randomFood();
@@ -277,6 +354,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (snakeBoard && snakeCanvas && snakeStart && snakeReset && snakeCtx) {
         resizeSnakeCanvas();
+        renderSnakeLeaderboard();
         resetSnakeState();
         snakeBoard.addEventListener('click', () => snakeBoard.focus());
         snakeStart.addEventListener('click', startSnake);

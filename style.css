@@ -113,6 +113,15 @@ body{
         .snake-row{display:flex;gap:0.45rem}
         .snake-btn{width:56px;height:56px;border:0;border-radius:14px;background:rgba(255,255,255,0.08);color:#f8fafc;font-size:1.15rem;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.08)}
         .snake-btn:hover{background:rgba(255,255,255,0.14)}
+        .leaderboard-panel{margin-top:1.1rem;padding:1rem 1.05rem;border-radius:18px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);color:#f8fafc}
+        .leaderboard-head h3{margin:0 0 0.25rem;font-size:1rem}
+        .leaderboard-head p{margin:0;color:rgba(248,250,252,0.72);font-size:0.9rem}
+        .leaderboard-list{margin:0.85rem 0 0;padding:0;list-style:none;display:grid;gap:0.55rem}
+        .leaderboard-list li{display:flex;align-items:center;justify-content:space-between;gap:0.75rem;padding:0.7rem 0.85rem;border-radius:12px;background:rgba(255,255,255,0.08)}
+        .leaderboard-list .rank{font-weight:700;color:#fde68a;min-width:1.5rem}
+        .leaderboard-list .player{flex:1;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .leaderboard-list .points{font-weight:700;color:#a7f3d0}
+        .leaderboard-empty{color:rgba(248,250,252,0.72);padding:0.35rem 0}
 
     /* Contact form */
     .contact-form{display:grid;gap:0.6rem;max-width:600px}

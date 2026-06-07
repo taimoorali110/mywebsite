@@ -104,6 +104,19 @@ body{
     /* Footer */
     .site-footer{border-top:1px solid rgba(15,23,42,0.04);padding:1.25rem 0;color:var(--muted)}
 
+    /* Support badge */
+    .support-badge{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:80;display:flex;align-items:center;gap:0.8rem;padding:0.85rem 1rem 0.85rem 0.85rem;border-radius:18px;background:rgba(255,255,255,0.92);backdrop-filter:blur(10px);box-shadow:0 18px 40px rgba(12,18,25,0.16);border:1px solid rgba(15,23,42,0.08);max-width:220px}
+    .support-badge .flag{width:54px;height:34px;position:relative;overflow:hidden;border-radius:8px;box-shadow:0 0 0 1px rgba(0,0,0,0.08)}
+    .support-badge .flag span{display:block;width:100%}
+    .support-badge .flag-black{height:33.33%;background:#111827}
+    .support-badge .flag-white{height:33.33%;background:#ffffff}
+    .support-badge .flag-green{height:33.34%;background:#15803d}
+    .support-badge .flag-red{position:absolute;left:0;top:0;width:0;height:0;border-top:17px solid transparent;border-bottom:17px solid transparent;border-left:18px solid #dc2626}
+    .support-copy{display:flex;flex-direction:column;gap:0.3rem;line-height:1.2}
+    .support-copy strong{color:var(--text);font-size:0.95rem}
+    .support-copy a{color:#15803d;font-weight:700;text-decoration:none}
+    .support-copy a:hover{text-decoration:underline}
+
 /* README and gallery */
 .readme{margin-top:1rem;background:var(--surface);padding:1rem;border-radius:10px}
 .readme pre{white-space:pre-wrap;font-size:0.95rem;color:var(--text);overflow:auto}
@@ -121,6 +134,7 @@ body{
         .site-nav.active{display:block;position:absolute;left:16px;right:16px;top:64px;background:var(--surface);border-radius:12px;padding:12px}
         .portfolio-section .portfolio-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:140px}
         .hero h1{font-size:1.6rem}
+        .support-badge{left:12px;right:12px;top:auto;bottom:12px;transform:none;max-width:none;justify-content:center}
     }
 
     /* Animations */

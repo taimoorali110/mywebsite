@@ -148,6 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let snakeFood = {x: 10, y: 10};
     let snakeSpeed = 180;
     let snakeLeaderboardData = loadSnakeLeaderboard();
+    let snakeLeaderboardSubmittedScore = 0;
 
     function resizeSnakeCanvas() {
         if (!snakeCanvas) return;
@@ -220,6 +221,31 @@ document.addEventListener('DOMContentLoaded', function() {
         return score >= snakeLeaderboardData[snakeLeaderboardData.length - 1].score;
     }
 
+    function currentSnakeHighScore() {
+        return snakeLeaderboardData.length ? snakeLeaderboardData[0].score : 0;
+    }
+
+    function maybeSubmitSnakeLeaderboardScore() {
+        if (snakeScoreValue <= snakeLeaderboardSubmittedScore) return;
+        if (snakeScoreValue <= currentSnakeHighScore()) return;
+
+        const enteredName = window.prompt('New high score! Enter your name for the leaderboard:', 'Anonymous');
+        if (enteredName === null) {
+            snakeLeaderboardSubmittedScore = snakeScoreValue;
+            return;
+        }
+
+        const name = enteredName.trim() || 'Anonymous';
+        snakeLeaderboardData = snakeLeaderboardData
+            .concat({name, score: snakeScoreValue, createdAt: Date.now()})
+            .sort((a, b) => b.score - a.score || a.createdAt - b.createdAt)
+            .slice(0, 5);
+        snakeLeaderboardSubmittedScore = snakeScoreValue;
+        saveSnakeLeaderboard();
+        renderSnakeLeaderboard();
+        updateSnakeUI(`New high score: ${snakeScoreValue}`);
+    }
+
     function submitSnakeLeaderboardScore(score) {
         if (!qualifiesForSnakeLeaderboard(score)) return;
 
@@ -250,6 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
         snakeScoreValue = 0;
         snakeDirection = {x: 1, y: 0};
         snakeNextDirection = {x: 1, y: 0};
+        snakeLeaderboardSubmittedScore = 0;
         snakeBody = [
             {x: 9, y: 10},
             {x: 8, y: 10},
@@ -297,7 +324,6 @@ document.addEventListener('DOMContentLoaded', function() {
         snakeRunning = false;
         clearInterval(snakeLoop);
         snakeLoop = null;
-        submitSnakeLeaderboardScore(snakeScoreValue);
         if (snakeStart) snakeStart.textContent = 'Play Again';
         updateSnakeUI('Game Over');
     }
@@ -326,6 +352,7 @@ document.addEventListener('DOMContentLoaded', function() {
             snakeFood = randomFood();
             snakeSpeed = Math.max(90, snakeSpeed - 4);
             updateSnakeUI('Nice!');
+            maybeSubmitSnakeLeaderboardScore();
             clearInterval(snakeLoop);
             snakeLoop = setInterval(stepSnake, snakeSpeed);
         } else {
